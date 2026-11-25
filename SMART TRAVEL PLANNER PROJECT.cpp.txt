@@ -1,0 +1,368 @@
+// Names : Mishal Ahmed , Imaan Ali
+#include <iostream>
+#include <string>
+using namespace std;
+
+int DisplayMenu();
+int SelectDestination();
+void SetDestinationRates(int destination, long long& accommodationRate, long long& transportRate, long long& foodRate);
+void GetTripDetails(int& travellers, int& days);
+long long SelectActivities(int travellers, string& selectedActivities);
+long long CalculateTripCost(int travellers, int days, long long accommodationRate, long long transportRate, long long foodRate, long long activities, long long& accommodation, long long& transport, long long& food);
+void DisplaySummary(int destination, int travellers, int days, string selectedActivities, long long accommodation, long long transport, long long food, long long activities, long long total);
+
+int main()
+{
+    int choice;
+    int destination;
+    int travellers;
+    int days;
+
+    long long accommodationRate;
+    long long transportRate;
+    long long foodRate;
+
+    long long accommodation;
+    long long transport;
+    long long food;
+    long long activities;
+    long long total;
+
+    string selectedActivities;
+
+    do
+    {
+        choice = DisplayMenu();
+
+        if (choice == 1)
+        {
+            destination = SelectDestination();
+
+            SetDestinationRates(destination, accommodationRate, transportRate, foodRate);
+
+            GetTripDetails(travellers, days);
+
+            activities = SelectActivities(travellers, selectedActivities);
+
+            total = CalculateTripCost(
+                travellers, days,
+                accommodationRate, transportRate, foodRate,
+                activities, accommodation, transport, food
+            );
+
+            DisplaySummary(
+                destination, travellers, days,
+                selectedActivities, accommodation, transport,
+                food, activities, total
+            );
+        }
+
+        else if (choice == 3)
+        {
+            cout << "\nThank you for using Smart Travel Planner!";
+        }
+
+    } while (choice != 3);
+
+    return 0;
+}
+
+int DisplayMenu()
+{
+    int menuChoice;
+
+    cout << "\n===== SMART TRAVEL PLANNER =====";
+    cout << "\n1. Plan a Trip";
+    cout << "\n2. View Available Destinations";
+    cout << "\n3. Exit";
+    cout << "\nEnter your choice: ";
+
+    cin >> menuChoice;
+
+    while (menuChoice < 1 || menuChoice > 3)
+    {
+        cout << "Invalid menu choice! Enter 1, 2 or 3: ";
+        cin >> menuChoice;
+    }
+
+    if (menuChoice == 2)
+    {
+        cout << "\n===== AVAILABLE DESTINATIONS =====";
+
+        cout << "\n\n1. Murree";
+        cout << "\nAccommodation: PKR 9000";
+        cout << "\nTransport: PKR 4000";
+        cout << "\nFood: PKR 3000";
+
+        cout << "\n\n2. Hunza";
+        cout << "\nAccommodation: PKR 12000";
+        cout << "\nTransport: PKR 15000";
+        cout << "\nFood: PKR 3000";
+
+        cout << "\n\n3. Swat";
+        cout << "\nAccommodation: PKR 8000";
+        cout << "\nTransport: PKR 6000";
+        cout << "\nFood: PKR 2000";
+
+        cout << "\n\n4. Naran";
+        cout << "\nAccommodation: PKR 10000";
+        cout << "\nTransport: PKR 8000";
+        cout << "\nFood: PKR 2500";
+    }
+
+    return menuChoice;
+}
+
+int SelectDestination()
+{
+    int destination;
+
+    cout << "\n===== SELECT DESTINATION =====";
+    cout << "\n1. Murree";
+    cout << "\n2. Hunza";
+    cout << "\n3. Swat";
+    cout << "\n4. Naran";
+    cout << "\nEnter destination: ";
+
+    cin >> destination;
+
+    while (destination < 1 || destination > 4)
+    {
+        cout << "Invalid destination! Enter 1, 2, 3 or 4: ";
+        cin >> destination;
+    }
+
+    return destination;
+}
+
+void SetDestinationRates(int destination, long long& accommodationRate, long long& transportRate, long long& foodRate)
+{
+    if (destination == 1)
+    {
+        accommodationRate = 9000;
+        transportRate = 4000;
+        foodRate = 3000;
+    }
+    else if (destination == 2)
+    {
+        accommodationRate = 12000;
+        transportRate = 15000;
+        foodRate = 3000;
+    }
+    else if (destination == 3)
+    {
+        accommodationRate = 8000;
+        transportRate = 6000;
+        foodRate = 2000;
+    }
+    else
+    {
+        accommodationRate = 10000;
+        transportRate = 8000;
+        foodRate = 2500;
+    }
+}
+
+void GetTripDetails(int& travellers, int& days)
+{
+    cout << "\nEnter number of travellers (1-10): ";
+
+    cin >> travellers;
+
+    while (travellers < 1 || travellers > 10)
+    {
+        cout << "Invalid number! Enter 1-10: ";
+        cin >> travellers;
+    }
+    cout << "Enter trip duration in days (1-30): ";
+
+    cin >> days;
+
+    while (days < 1 || days > 30)
+    {
+        cout << "Invalid duration! Enter 1-30 days: ";
+        cin >> days;
+    }
+}
+
+long long SelectActivities(int travellers, string& selectedActivities)
+{
+    int activityChoice;
+    long long activities = 0;
+
+    bool sightseeing = false;
+    bool hiking = false;
+    bool boating = false;
+    bool museum = false;
+    bool adventure = false;
+
+    selectedActivities = "";
+
+    cout << "\n===== SELECT ACTIVITIES =====";
+    cout << "\n1. Sightseeing - PKR 600";
+    cout << "\n2. Hiking - PKR 1200";
+    cout << "\n3. Boating - PKR 1100";
+    cout << "\n4. Museum - PKR 350";
+    cout << "\n5. Adventure - PKR 1800";
+    cout << "\n0. Finish Activity Selection";
+
+    do
+    {
+        cout << "\nEnter activity choice (0-5): ";
+        cin >> activityChoice;
+
+        while (activityChoice < 0 || activityChoice > 5)
+        {
+            cout << "Invalid activity choice! Enter 0-5: ";
+            cin >> activityChoice;
+        }
+     
+        if (activityChoice == 1)
+        {
+            if (sightseeing)
+                cout << "Activity already added!";
+            else
+            {
+                sightseeing = true;
+                activities += 600LL * travellers;
+
+                if (selectedActivities != "")
+                    selectedActivities += ", ";
+
+                selectedActivities += "Sightseeing";
+            }
+        }
+        else if (activityChoice == 2)
+        {
+            if (hiking)
+                cout << "Activity already added!";
+            else
+            {
+                hiking = true;
+                activities += 1200LL * travellers;
+
+                if (selectedActivities != "")
+                    selectedActivities += ", ";
+
+                selectedActivities += "Hiking";
+            }
+        }
+        else if (activityChoice == 3)
+        {
+            if (boating)
+                cout << "Activity already added!";
+            else
+            {
+                boating = true;
+                activities += 1100LL * travellers;
+
+                if (selectedActivities != "")
+                    selectedActivities += ", ";
+
+                selectedActivities += "Boating";
+            }
+        }
+        else if (activityChoice == 4)
+        {
+            if (museum)
+                cout << "Activity already added!";
+            else
+            {
+                museum = true;
+                activities += 350LL * travellers;
+
+                if (selectedActivities != "")
+                    selectedActivities += ", ";
+
+                selectedActivities += "Museum";
+            }
+        }
+        else if (activityChoice == 5)
+        {
+            if (adventure)
+                cout << "Activity already added!";
+            else
+            {
+                adventure = true;
+                activities += 1800LL * travellers;
+
+                if (selectedActivities != "")
+                    selectedActivities += ", ";
+
+                selectedActivities += "Adventure";
+            }
+        }
+
+    } while (activityChoice != 0);
+
+    return activities;
+}
+
+long long CalculateTripCost(int travellers, int days, long long accommodationRate, long long transportRate, long long foodRate, long long activities, long long& accommodation, long long& transport, long long& food)
+{
+    int nights = days - 1;
+    int rooms = (travellers + 1) / 2;
+
+    accommodation = accommodationRate * rooms * nights;
+    transport = transportRate * travellers;
+    food = foodRate * travellers * days;
+
+    long long total = accommodation + transport + food + activities;
+
+    return total;
+}
+
+void DisplaySummary(int destination, int travellers, int days, string selectedActivities, long long accommodation, long long transport, long long food, long long activities, long long total)
+{
+    long long budget;
+
+    cout << "\nEnter total trip budget (PKR): ";
+    cin >> budget;
+
+    while (budget <= 0)
+    {
+        cout << "Invalid budget! Enter a whole number greater than 0: ";
+        cin >> budget;
+    }
+
+    cout << "\n===== TRIP SUMMARY =====";
+
+    cout << "\nDestination: ";
+
+    if (destination == 1)
+        cout << "Murree";
+    else if (destination == 2)
+        cout << "Hunza";
+    else if (destination == 3)
+        cout << "Swat";
+    else
+        cout << "Naran";
+
+    cout << "\nTravellers: " << travellers;
+    cout << "\nDuration: " << days << " days";
+
+    cout << "\nSelected Activities: ";
+
+    if (selectedActivities == "")
+        cout << "None";
+    else
+        cout << selectedActivities;
+
+    cout << "\n\nAccommodation Cost: PKR " << accommodation;
+    cout << "\nTransport Cost: PKR " << transport;
+    cout << "\nFood Cost: PKR " << food;
+    cout << "\nActivities Cost: PKR " << activities;
+    cout << "\nTotal Estimated Cost: PKR " << total;
+    cout << "\nYour Budget: PKR " << budget;
+    if (total <= budget)
+    {
+        cout << "\nBudget Status: WITHIN BUDGET";
+        cout << "\nRemaining Budget: PKR " << budget - total;
+    }
+    else
+    {
+        cout << "\nBudget Status: OVER BUDGET";
+        cout << "\nExceeded Budget: PKR " << total - budget;
+        
+    }
+}
